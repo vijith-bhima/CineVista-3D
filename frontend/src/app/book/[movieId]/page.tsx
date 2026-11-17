@@ -249,8 +249,8 @@ export default function BookTicketsPage() {
     <div
       className={
         isTheatreView
-          ? 'fixed inset-0 z-[100] h-screen w-screen overflow-hidden bg-black'
-          : 'relative h-[calc(100vh-4rem)] w-full overflow-hidden bg-[#07080B]'
+          ? 'fixed inset-0 z-[100] h-screen h-[100dvh] w-screen overflow-hidden bg-black'
+          : 'relative h-[calc(100vh-4rem)] h-[calc(100dvh-4rem)] w-full overflow-hidden bg-[#07080B]'
       }
     >
       {/* ─── 1. 100% Full-Bleed 3D Cinema Theater Canvas (Untouched & Always Ready) ─── */}

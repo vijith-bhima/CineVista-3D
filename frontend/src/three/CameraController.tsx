@@ -63,9 +63,9 @@ export default function CameraController() {
         case 'Overview': {
           const isMob = typeof window !== 'undefined' && window.innerWidth < 768;
           if (isMob) {
-            desiredPos.current.set(-5.5, 13.5, 22.5);
+            desiredPos.current.set(-4.5, 12.0, 19.5);
             desiredTarget.current.set(0, 3.8, 1);
-            targetFOV.current = 65;
+            targetFOV.current = 62;
           } else {
             desiredPos.current.set(-8.5, 10.5, 17.5);
             desiredTarget.current.set(0, 3.8, 1);
@@ -258,26 +258,41 @@ export default function CameraController() {
 
       controlsRef.current.update();
 
-      // Boundary clamp to keep camera comfortably inside the cinema room envelope (no wall clipping)
-      camera.position.x = Math.max(-12.8, Math.min(12.8, camera.position.x));
-      camera.position.y = Math.max(1.8, Math.min(14.2, camera.position.y));
-      camera.position.z = Math.max(-13.5, Math.min(20.2, camera.position.z));
+      // Boundary clamp
+      camera.position.x = Math.max(-14.0, Math.min(14.0, camera.position.x));
+      camera.position.y = Math.max(1.5, Math.min(16.0, camera.position.y));
+      camera.position.z = Math.max(-14.0, Math.min(24.0, camera.position.z));
     }
   });
+
+  // Cancel transition on user interaction so touch rotation is instant
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    const onStart = () => {
+      isTransitioning.current = false;
+    };
+    controls.addEventListener('start', onStart);
+    return () => controls.removeEventListener('start', onStart);
+  }, []);
 
   return (
     <OrbitControls
       ref={controlsRef}
       enableDamping={true}
-      dampingFactor={0.12} // Silky smooth, fluid rotation with instant responsive stop
+      dampingFactor={0.12}
       enableZoom={true}
-      zoomSpeed={0.9}
-      rotateSpeed={0.8}
-      panSpeed={0.7}
-      minDistance={3.5}
-      maxDistance={22.5}
-      minPolarAngle={0.1}
-      maxPolarAngle={Math.PI * 0.48}
+      zoomSpeed={1.0}
+      rotateSpeed={1.0}
+      panSpeed={0.8}
+      minDistance={3.0}
+      maxDistance={28.0}
+      minPolarAngle={0.05}
+      maxPolarAngle={Math.PI * 0.49}
+      touches={{
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN,
+      }}
     />
   );
 }

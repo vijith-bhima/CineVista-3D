@@ -28,7 +28,7 @@ export default function CinemaCanvas({ trailerUrl, seats, onSeatClick }: CinemaC
   }, []);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#040508]">
+    <div className="relative h-full w-full overflow-hidden bg-[#040508] touch-none select-none">
       <Canvas
         camera={{
           position: [0, 16.5, 27],

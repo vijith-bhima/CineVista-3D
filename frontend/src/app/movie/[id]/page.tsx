@@ -21,7 +21,7 @@ import {
   Utensils,
   Info,
   X,
-  ChevronRight,
+  Compass,
 } from 'lucide-react';
 import { getMovie, getTheatres, getShows } from '@/lib/api';
 import { Movie, Theatre, Show } from '@/types';
@@ -211,10 +211,85 @@ export default function MovieDetailPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#07080B] text-slate-900 dark:text-white font-sans antialiased transition-colors duration-200">
       {/* =========================================================================
-          1. IMMERSIVE CINEMA TRAILER HERO (FULL VIEW VISIBLE ON BOTH DESKTOP & MOBILE)
+          1. RESPONSIVE TRAILER HERO:
+             - MOBILE: Clean 16:9 Uncropped Video Box Container
+             - DESKTOP: Stunning Full-Height Immersive Cinematic Background View
           ========================================================================= */}
-      <section className="relative h-[78vh] sm:h-[86vh] w-full overflow-hidden select-none bg-black">
-        {/* Background Fullscreen Video Trailer */}
+
+      {/* --- MOBILE VIEW (< 640px): 16:9 Uncropped Box Container --- */}
+      <section className="block sm:hidden bg-black pt-3 pb-5 px-3 border-b border-slate-800">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Movies</span>
+            </Link>
+          </div>
+
+          <div className="relative w-full aspect-[16/9] bg-black rounded-2xl overflow-hidden border border-white/15 shadow-2xl flex items-center justify-center">
+            <img
+              src={movie.posterUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover filter blur-xl opacity-30 pointer-events-none"
+            />
+            {!videoError && videoSource ? (
+              <video
+                ref={videoRef}
+                key={videoSource}
+                autoPlay
+                loop
+                muted={isMuted}
+                playsInline
+                preload="auto"
+                className="relative z-10 h-full w-full object-contain"
+                poster={movie.posterUrl}
+              >
+                <source src={videoSource} type="video/mp4" />
+              </video>
+            ) : (
+              <img src={movie.posterUrl} alt={movie.title} className="relative z-10 h-full w-full object-contain" />
+            )}
+
+            <div className="absolute bottom-2.5 right-2.5 z-20">
+              <button
+                onClick={toggleAudio}
+                className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-black/70 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur-md shadow-lg"
+              >
+                {isMuted ? <VolumeX className="h-3.5 w-3.5 text-gray-300" /> : <Volume2 className="h-3.5 w-3.5 text-[#e8b634]" />}
+                <span>{isMuted ? 'Mute' : 'Audio'}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-start justify-between gap-3 pt-1 text-white">
+            <div className="flex items-start gap-3 min-w-0">
+              <img src={movie.posterUrl} alt={movie.title} className="h-20 w-14 rounded-lg object-cover object-top shrink-0 border border-white/20" />
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1 text-[10px] font-bold mb-1">
+                  <span className="rounded bg-white/20 px-1.5 py-0.5">{movie.language}</span>
+                  <span className="rounded bg-white/20 px-1.5 py-0.5">{durationText}</span>
+                  <span className="rounded bg-[#e8b634] text-black px-1.5 py-0.5 font-black">U/A 16+</span>
+                </div>
+                <h1 className="font-display font-black text-xl text-white truncate">{movie.title}</h1>
+                <p className="text-xs text-amber-400 font-bold mt-0.5">★ {movie.rating.toFixed(1)} / 10 • {movie.genre}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={scrollToShows}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#e8b634] px-4 py-2.5 text-xs font-black text-black shadow-md"
+            >
+              <span>Book</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* --- DESKTOP / LAPTOP VIEW (>= 640px): Original Immersive Fullscreen Cinematic View --- */}
+      <section className="hidden sm:block relative h-[82vh] sm:h-[88vh] w-full overflow-hidden select-none bg-black">
         <div className="absolute inset-0 z-0">
           {!videoError && videoSource ? (
             <video
@@ -235,7 +310,7 @@ export default function MovieDetailPage() {
                   setVideoError(true);
                 }
               }}
-              className="h-full w-full object-cover filter brightness-[0.92]"
+              className="h-full w-full object-cover filter brightness-[0.9]"
               poster={movie.posterUrl}
             >
               <source src={videoSource} type="video/mp4" />
@@ -244,34 +319,30 @@ export default function MovieDetailPage() {
             <img
               src={movie.posterUrl}
               alt={movie.title}
-              className="h-full w-full object-cover filter brightness-[0.8]"
+              className="h-full w-full object-cover filter brightness-[0.7]"
             />
           )}
 
-          {/* Vignettes for crisp text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/30 pointer-events-none" />
         </div>
 
-        {/* Top Navigation */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-8 z-20 pointer-events-auto">
+        <div className="absolute top-6 left-8 z-20 pointer-events-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md hover:bg-black/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/50 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-md hover:bg-black/80 transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Movies</span>
           </Link>
         </div>
 
-        {/* Bottom Lower-Third Area (Fully Visible Layout on Mobile & Desktop) */}
-        <div className="absolute bottom-6 sm:bottom-8 inset-x-0 z-20 px-4 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-6 pointer-events-none">
-          <div className="flex items-center gap-3.5 sm:gap-4 pointer-events-auto w-full sm:w-auto">
-            {/* Poster Thumbnail */}
+        <div className="absolute bottom-8 inset-x-0 z-20 px-6 sm:px-8 lg:px-12 flex items-end justify-between gap-6 pointer-events-none">
+          <div className="flex items-center gap-4 pointer-events-auto">
             <img
               src={movie.posterUrl}
               alt={movie.title}
-              className="h-24 w-16 sm:h-28 sm:w-20 rounded-xl object-cover object-top border border-white/30 shadow-2xl shrink-0"
+              className="h-28 w-20 rounded-xl object-cover border border-white/25 shadow-2xl flex-shrink-0"
               onError={(e) => {
                 const target = e.currentTarget;
                 if (!target.dataset.fallback) {
@@ -281,40 +352,32 @@ export default function MovieDetailPage() {
               }}
             />
 
-            {/* Movie Title & Meta */}
-            <div className="flex flex-col gap-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-bold text-white">
-                <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] sm:text-xs">
-                  {movie.language}
-                </span>
-                <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] sm:text-xs">
-                  {durationText}
-                </span>
-                <span className="rounded bg-[#e8b634] text-black px-2 py-0.5 font-black text-[10px] sm:text-xs">
-                  U/A 16+
-                </span>
+            <div className="flex flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-white">
+                <span className="rounded bg-white/20 px-2 py-0.5">{movie.language}</span>
+                <span className="rounded bg-white/20 px-2 py-0.5">{durationText}</span>
+                <span className="rounded bg-[#e8b634] text-black px-2 py-0.5 font-black">U/A 16+</span>
               </div>
 
-              <h1 className="font-display font-black text-2xl sm:text-4xl text-white tracking-wide drop-shadow-md truncate">
+              <h1 className="font-display font-black text-3xl sm:text-4xl text-white tracking-wide drop-shadow-md">
                 {movie.title}
               </h1>
 
-              <div className="flex items-center gap-2 text-xs text-white/90">
+              <div className="flex items-center gap-2.5 text-xs text-white/90">
                 <span className="flex items-center gap-1 font-bold text-[#e8b634]">
-                  <Star className="h-3.5 w-3.5 fill-[#e8b634] text-[#e8b634]" />
+                  <Star className="h-4 w-4 fill-[#e8b634] text-[#e8b634]" />
                   {movie.rating.toFixed(1)} / 10
                 </span>
                 <span className="text-white/40">•</span>
-                <span className="truncate">{movie.genre}</span>
+                <span className="text-white/90">{movie.genre}</span>
               </div>
             </div>
           </div>
 
-          {/* Sound & CTA Controls */}
-          <div className="flex items-center gap-2.5 sm:gap-3 pointer-events-auto w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex items-center gap-3 pointer-events-auto">
             <button
               onClick={toggleAudio}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-3.5 py-2 text-xs font-semibold text-white backdrop-blur-md hover:bg-black/90 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-md hover:bg-black/80 transition-colors"
             >
               {isMuted ? (
                 <>
@@ -331,7 +394,7 @@ export default function MovieDetailPage() {
 
             <button
               onClick={scrollToShows}
-              className="inline-flex items-center gap-2 rounded-full bg-[#e8b634] hover:bg-[#d8a529] px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-black text-black transition-all shadow-xl active:scale-95"
+              className="inline-flex items-center gap-2 rounded-full bg-[#e8b634] hover:bg-[#d8a529] px-7 py-2.5 text-sm font-black text-black transition-all shadow-xl hover:scale-105 active:scale-95"
             >
               <span>Book Showtimes</span>
             </button>
