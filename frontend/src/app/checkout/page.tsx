@@ -28,6 +28,7 @@ import confetti from 'canvas-confetti';
 import { useBookingStore } from '@/store/useBookingStore';
 import { createBooking } from '@/lib/api';
 import { Booking } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 // Seat category & pricing helper matching backend logic
 function getSeatInfo(label: string) {
@@ -41,6 +42,7 @@ type PayMethod = 'upi' | 'card' | 'netbanking' | 'demo';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { user } = useAuth();
 
   // Zustand state
   const selectedMovie = useBookingStore((s) => s.selectedMovie);
@@ -173,6 +175,7 @@ export default function CheckoutPage() {
         bookingResult = await createBooking({
           showId: displayShow.id,
           seats: displaySeats,
+          userId: user?.id || null,
         });
       } catch (backendErr: unknown) {
         console.warn('Backend booking API notice (generating local verified pass):', backendErr);
@@ -182,6 +185,7 @@ export default function CheckoutPage() {
           bookingId: Math.floor(100000 + Math.random() * 900000),
           ticketId: fallbackTicketId,
           showId: displayShow.id,
+          userId: user?.id || null,
           movieTitle: displayMovie.title,
           theatreName: displayTheatre.name,
           showDate: displayShow.showDate,

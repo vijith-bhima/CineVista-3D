@@ -105,6 +105,10 @@ export default function BookingHeader({
               <span className="rounded-md bg-amber-400/20 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-amber-300 border border-amber-400/30">
                 {selectedShow?.format || 'IMAX 3D'}
               </span>
+              <span className="hidden sm:inline-flex items-center gap-1 rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Sync</span>
+              </span>
             </div>
 
             {/* Quick Details Chips */}

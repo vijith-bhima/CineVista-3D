@@ -71,3 +71,11 @@ export interface Booking {
 
 export type CameraPreset = 'Overview' | 'Near screen' | 'Balcony' | 'Top view' | 'My Seat' | 'From Stage' | 'Bird Eye';
 
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  createdAt?: string;
+}
+

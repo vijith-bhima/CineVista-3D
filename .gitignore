@@ -80,3 +80,19 @@ tmp/
 *~
 pptx_temp/
 extracted_media/
+
+
+# Heavy Media / Video Trailers (1.2+ GB - Do not push to Git)
+*.mp4
+*.webm
+*.mkv
+*.avi
+*.mov
+*.MP4
+**/trailers/
+**/Trailers/
+**/media/trailers/
+public/Trailers/
+public/trailers/
+frontend/public/trailers/
+frontend/public/media/trailers/

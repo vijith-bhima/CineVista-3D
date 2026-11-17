@@ -171,6 +171,27 @@ export default function BookTicketsPage() {
     }
   }, [selectedShow, reloadSeats]);
 
+  // Real-time live seat database synchronization (auto-polls PostgreSQL for seat status updates)
+  useEffect(() => {
+    if (!selectedShow) return;
+
+    const syncInterval = setInterval(() => {
+      getSeats(selectedShow.id)
+        .then((latestSeats) => {
+          setSeats((prevSeats) => {
+            const hasChanged = latestSeats.some((newSeat, idx) => {
+              const oldSeat = prevSeats[idx];
+              return !oldSeat || oldSeat.status !== newSeat.status;
+            });
+            return hasChanged ? latestSeats : prevSeats;
+          });
+        })
+        .catch(() => {});
+    }, 3500);
+
+    return () => clearInterval(syncInterval);
+  }, [selectedShow]);
+
   const handleSelectTheatre = (tId: number) => {
     setSelectedTheatreId(tId);
     const found = theatres.find((t) => t.id === tId) || null;
