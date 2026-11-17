@@ -13,28 +13,34 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  // Always default strictly to 'light' theme
   const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem('cinevista-theme') as Theme | null;
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else if (systemPrefersDark) {
-      setTheme('dark');
-    }
+    try {
+      const savedTheme = localStorage.getItem('cinevista-theme') as Theme | null;
+      // Only use dark if the user explicitly saved 'dark' previously
+      if (savedTheme === 'dark') {
+        setTheme('dark');
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        setTheme('light');
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    } catch {}
   }, []);
 
   useEffect(() => {
     if (mounted) {
-      // Update document class and localStorage when theme changes
       document.documentElement.classList.remove('light', 'dark');
       document.documentElement.classList.add(theme);
-      localStorage.setItem('cinevista-theme', theme);
+      try {
+        localStorage.setItem('cinevista-theme', theme);
+      } catch {}
     }
   }, [theme, mounted]);
 
