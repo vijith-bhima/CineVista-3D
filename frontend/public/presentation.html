@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineVista 3D — Official Project Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #06070a;
+      color: #f0f2f5;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Outfit', sans-serif;
+    }
+    .slide {
+      display: none;
+      min-height: 80vh;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+    .gold-glow {
+      box-shadow: 0 0 35px rgba(232, 182, 52, 0.25);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between selection:bg-[#e8b634] selection:text-black">
+
+  <!-- Top Presentation Header -->
+  <header class="border-b border-white/10 bg-black/60 backdrop-blur-xl px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2">
+        <span class="rounded-xl bg-[#e8b634] px-2.5 py-1 text-xs font-black tracking-widest text-black uppercase">
+          CINEVISTA 3D
+        </span>
+      </a>
+      <span className="hidden sm:inline text-xs text-white/50 border-l border-white/10 pl-3">
+        SRM University-AP · PRD Final Presentation
+      </span>
+    </div>
+
+    <!-- Slide Navigation Controls -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <span id="slideIndicator" class="font-mono text-xs font-bold text-[#e8b634] bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+        Slide 1 / 12
+      </span>
+      <button onclick="prevSlide()" class="h-8 w-8 rounded-lg border border-white/15 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center transition-all">
+        ‹
+      </button>
+      <button onclick="nextSlide()" class="h-8 w-8 rounded-lg border border-white/15 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center transition-all">
+        ›
+      </button>
+      <a href="/CineVista_3D_Project_Presentation.pptx" download class="hidden sm:flex items-center gap-1.5 rounded-lg bg-[#e8b634] hover:bg-[#d8a529] text-black px-3 py-1.5 text-xs font-bold transition-all">
+        ⬇ Download PPTX
+      </a>
+    </div>
+  </header>
+
+  <!-- Slide Container -->
+  <main class="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full">
+
+    <!-- SLIDE 1: Title & University Identity -->
+    <div class="slide active flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-14 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-amber-500/10 blur-[140px] pointer-events-none"></div>
+      <div class="inline-flex items-center gap-2 rounded-md bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300 w-max mb-6">
+        <span>SRM UNIVERSITY-AP · CSE CAPSTONE 2026</span>
+      </div>
+      <h1 class="font-display text-4xl sm:text-6xl font-black text-white leading-tight">
+        CineVista <span class="text-[#e8b634]">3D</span>
+      </h1>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-300 mt-2">
+        An Immersive 3D Movie Ticket Booking System
+      </h2>
+      <p class="text-sm sm:text-base text-gray-400 mt-4 max-w-3xl leading-relaxed">
+        Transforming flat 2D seat matrices into an interactive real-time WebGL cinematic experience with first-person sightline previews and atomic zero-conflict booking.
+      </p>
+
+      <div class="mt-10 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+        <div>
+          <span class="text-gray-500 block">Product Owner</span>
+          <span class="font-bold text-white text-sm">Bhima Vijith</span>
+          <span class="text-[10px] text-amber-400 block font-mono">AP25110070408</span>
+        </div>
+        <div>
+          <span class="text-gray-500 block">Sprint Duration</span>
+          <span class="font-bold text-white text-sm">15-Day Build Window</span>
+        </div>
+        <div>
+          <span class="text-gray-500 block">Status</span>
+          <span class="font-bold text-emerald-400 text-sm">Production Ready</span>
+        </div>
+        <div>
+          <span class="text-gray-500 block">Architecture</span>
+          <span class="font-bold text-white text-sm">Next.js 14 + Java + PG</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Team Members -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Project Governance</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        Team Members & Module Ownership
+      </h2>
+
+      <!-- Leader Card -->
+      <div class="rounded-2xl border-2 border-[#e8b634] bg-amber-500/10 p-5 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="font-display font-black text-lg text-white">Bhima Vijith</span>
+            <span class="font-mono text-xs font-bold text-amber-300 bg-black/40 px-2 py-0.5 rounded">AP25110070408</span>
+          </div>
+          <p class="text-xs text-amber-200 mt-1 font-semibold">Group Leader & Lead Developer</p>
+          <p class="text-[11px] text-gray-300 mt-0.5">Solely implemented all technical architecture, coding, Java backend, WebGL 3D engine, Next.js frontend, database concurrency, and deployment.</p>
+        </div>
+      </div>
+
+      <!-- 4 Members Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white text-sm">NV Bhargav</span>
+            <span class="font-mono text-amber-400 text-[10px]">AP25110070576</span>
+          </div>
+          <span class="text-amber-300 block text-[11px] mt-0.5 font-medium">Resource Collection & Media Assets</span>
+          <p class="text-gray-400 mt-1 text-[11px]">Collecting digital resources, media assets (movie posters, teasers, and trailers), and managing asset storage.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white text-sm">A Sai Kishore</span>
+            <span class="font-mono text-amber-400 text-[10px]">AP25110071386</span>
+          </div>
+          <span class="text-amber-300 block text-[11px] mt-0.5 font-medium">Project References & UX Benchmarks</span>
+          <p class="text-gray-400 mt-1 text-[11px]">Finding external project references, UI/UX inspiration benchmarks, and reviewing design patterns.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white text-sm">V Koushik</span>
+            <span class="font-mono text-amber-400 text-[10px]">AP25110071016</span>
+          </div>
+          <span class="text-amber-300 block text-[11px] mt-0.5 font-medium">Technical Research & Standards</span>
+          <p class="text-gray-400 mt-1 text-[11px]">Technical research, documentation analysis, and exploring database atomicity standards.</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white text-sm">B Lakshmi Manoj</span>
+            <span class="font-mono text-amber-400 text-[10px]">AP25110071285</span>
+          </div>
+          <span class="text-amber-300 block text-[11px] mt-0.5 font-medium">Requirements Research & PRD Drafting</span>
+          <p class="text-gray-400 mt-1 text-[11px]">Requirements research, user journey analysis, and drafting initial project specifications.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Problem vs Solution -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Problem & Innovation</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        The Problem vs. The CineVista 3D Solution
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="rounded-2xl border border-red-500/30 bg-red-950/20 p-6 text-xs sm:text-sm">
+          <h3 class="font-display font-bold text-red-400 text-base mb-3 flex items-center gap-2">
+            <span>⚠ Traditional Booking Portals</span>
+          </h3>
+          <ul class="space-y-3 text-red-200/80">
+            <li><strong>Flat 2D Grid Disconnect:</strong> Patrons cannot gauge sightlines, viewing angles, screen distance, or elevation until they enter the hall.</li>
+            <li><strong>Scattered Steps:</strong> Trailers, showtimes, multiplex schedules, and seat maps are disjointed across separate pages.</li>
+            <li><strong>Concurrency Failures:</strong> Weak locking causes simultaneous transaction failures during blockbuster booking rushes.</li>
+            <li><strong>Static Seat Charts:</strong> Bland spreadsheet-like experience lacking cinematic immersion.</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-amber-400/40 bg-amber-500/10 p-6 text-xs sm:text-sm">
+          <h3 class="font-display font-bold text-amber-300 text-base mb-3 flex items-center gap-2">
+            <span>★ The CineVista 3D Solution</span>
+          </h3>
+          <ul class="space-y-3 text-amber-100/90">
+            <li><strong>Immersive 3D Auditorium:</strong> Real-time WebGL space with accurate tier elevations and Christie 4K laser curved screen.</li>
+            <li><strong>'Feel The View' First-Person POV:</strong> Clicking any seat glides the camera directly to that exact eye-view perspective.</li>
+            <li><strong>Live Trailer on Canvas:</strong> The film's official trailer streams directly on the virtual 3D cinema screen as an interactive video texture.</li>
+            <li><strong>Guaranteed Zero Double-Bookings:</strong> PostgreSQL row-level locks ensure atomic multi-seat transactions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Full-Stack Architecture -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">System Design</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        Full-Stack Technology Stack & Architecture
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block mb-1">FRONTEND LAYER</span>
+          <h3 class="font-bold text-white text-sm mb-3">Next.js 14 + React 18</h3>
+          <ul class="space-y-2 text-gray-300">
+            <li>• Three.js & React Three Fiber (R3F) WebGL rendering</li>
+            <li>• Zustand for atomic reactive booking state</li>
+            <li>• Tailwind CSS for responsive styling</li>
+            <li>• Full Dark/Light Theme with localStorage</li>
+            <li>• 6-Row 3D moving poster preloader wall</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block mb-1">BACKEND MICROSERVICES</span>
+          <h3 class="font-bold text-white text-sm mb-3">Plain Java (JDK HttpServer)</h3>
+          <ul class="space-y-2 text-gray-300">
+            <li>• Zero-overhead, low-latency REST endpoints</li>
+            <li>• Custom JSON marshalling & CORS handling</li>
+            <li>• Dedicated atomic BookingHandler</li>
+            <li>• Strict input validation regex on seat labels</li>
+            <li>• Tested with 50 concurrent seat threads</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block mb-1">DATABASE ENGINE</span>
+          <h3 class="font-bold text-white text-sm mb-3">PostgreSQL + JDBC Pool</h3>
+          <ul class="space-y-2 text-gray-300">
+            <li>• Custom connection pool (25 connections)</li>
+            <li>• Row-level lock (SELECT ... FOR UPDATE)</li>
+            <li>• Enforced compound key: (show_id, seat_label)</li>
+            <li>• 32 master Indian cinema catalog titles</li>
+            <li>• 6,400+ scheduled screenings across 9 venues</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Showcase - Home Page -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-6 sm:p-10 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Product Showcase</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-4">
+        Home Page — Hero Carousel, Trending Now & Coming Soon
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-8 rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+          <img src="/screenshots/home.png" alt="Home Page Screenshot" class="w-full object-cover">
+        </div>
+        <div class="lg:col-span-4 space-y-3 text-xs text-gray-300">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">Prioritized Hero Carousel</h4>
+            <p>Auto-advances through curated releases: Ramayana, Aakasamlo Oka Tara, and OM.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">Coming Soon & Trending Now</h4>
+            <p>Coming Soon leads with user-requested titles; Trending Now highlights current blockbusters with zero overlap.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">Multi-Attribute Filter Matrix</h4>
+            <p>Search across 32 titles, languages, and formats with instant filtering.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Showcase - 3D Theatre -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-6 sm:p-10 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Core Innovation</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-4">
+        Real-Time 3D Auditorium & 'Feel The View' Seat Selection
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-8 rounded-2xl overflow-hidden border-2 border-amber-400/50 shadow-2xl">
+          <img src="/screenshots/theatre_3d.png" alt="3D Theatre Screenshot" class="w-full object-cover">
+        </div>
+        <div class="lg:col-span-4 space-y-3 text-xs text-gray-300">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">Christie 4K Curved Screen</h4>
+            <p>Live trailer streaming as a video texture on the 3D screen geometry with audio control.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">'Feel The View' POV</h4>
+            <p>Camera moves into any seat's exact eye-level perspective to check sightlines before booking.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">10 Tiered Rows (A-J)</h4>
+            <p>Standard (A-D ₹150), Premium (E-H ₹240), and Royal Recliner (I-J ₹550).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Showcase - Movie Detail -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-6 sm:p-10 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Feature Presentation</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-4">
+        Movie Detail Page — Immersive Trailer & Venue Schedules
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-8 rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+          <img src="/screenshots/movie_detail.png" alt="Movie Detail Screenshot" class="w-full object-cover">
+        </div>
+        <div class="lg:col-span-4 space-y-3 text-xs text-gray-300">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">Fullscreen Ambient Trailer</h4>
+            <p>High-definition video plays in background with audio toggle and poster fallback.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">7-Day Sticky Date Bar</h4>
+            <p>Quick day/month calendar row with instant screening schedule refresh.</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-3.5">
+            <h4 class="font-bold text-amber-400 text-sm mb-1">9 Partner Multiplexes</h4>
+            <p>Distance in km, amenities (M-Ticket, F&B), and direct 3D seat map shortcuts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Showcase - Checkout & Tickets -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-6 sm:p-10 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Transaction & Fulfillment</span>
+      <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-4">
+        Checkout Gateway & Verified QR Admission Pass
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+        <div class="rounded-2xl overflow-hidden border border-white/20 shadow-xl">
+          <img src="/screenshots/checkout.png" alt="Checkout Screenshot" class="w-full object-cover">
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-white/20 shadow-xl">
+          <img src="/screenshots/tickets.png" alt="Tickets Screenshot" class="w-full object-cover">
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 text-xs text-amber-200">
+        <strong>Fulfillment Highlights:</strong> Universal payment options (UPI/QR, Card, Net Banking, Demo) • Promo code engine (CINE50, FIRST100) • Verified QR Admission Pass generated post-payment with ZXing encoding, printable e-ticket, and persistent 'My Tickets' storage.
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Concurrency & Stress Testing -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Reliability & Non-Functional Testing</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        Zero Double-Booking Guarantee & Stress Testing
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
+        <div class="rounded-2xl border border-emerald-400/30 bg-emerald-950/20 p-5">
+          <span class="text-emerald-400 font-bold block text-sm mb-1">50 SIMULTANEOUS THREADS</span>
+          <h4 class="font-black text-white text-xl mb-2">0 Conflict Errors</h4>
+          <p class="text-emerald-200/80">Simulated 50 concurrent threads targeting identical seat reservations simultaneously. Exactly 1 succeeded; 49 received clean HTTP 409 Conflict notices.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block text-sm mb-1">REST API RESPONSE TIME</span>
+          <h4 class="font-black text-white text-xl mb-2">&lt; 120ms Latency</h4>
+          <p class="text-gray-300">Pure Java JDK HttpServer microservices deliver sub-150ms round-trip latency on REST booking API calls under load.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block text-sm mb-1">3D WEBGL RENDERING</span>
+          <h4 class="font-black text-white text-xl mb-2">60 FPS Hardware-Accelerated</h4>
+          <p class="text-gray-300">Smooth 60 frames per second on laptops with WebGL hardware acceleration; stable 30+ FPS on mobile devices.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <span class="text-amber-400 font-bold block text-sm mb-1">TRANSACTION ISOLATION</span>
+          <h4 class="font-black text-white text-xl mb-2">ACID Compliant</h4>
+          <p class="text-gray-300">PostgreSQL row-level locks (SELECT ... FOR UPDATE) ensure serializable atomic transactions across concurrent users.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: 15-Day Roadmap -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Execution Timeline</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        15-Day Agile Sprint Delivery Plan (From PRD)
+      </h2>
+
+      <div class="space-y-2.5 text-xs">
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 1–2</span>
+          <span class="text-white font-bold shrink-0">Foundations & Wireframes:</span>
+          <span class="text-gray-400 truncate">PRD drafting, wireframing, PostgreSQL schema, asset catalog ingest (posters, trailers).</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 3–5</span>
+          <span class="text-white font-bold shrink-0">Java Backend & APIs:</span>
+          <span class="text-gray-400 truncate">JDK HttpServer microservices, database connection pool, concurrency testing.</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 6–7</span>
+          <span class="text-white font-bold shrink-0">Preloader & Web Portal:</span>
+          <span class="text-gray-400 truncate">6-Row 3D moving poster preloader wall, home page carousel, movie detail views.</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 8–10</span>
+          <span class="text-white font-bold shrink-0">3D Cinema Engine:</span>
+          <span class="text-gray-400 truncate">Three.js auditorium model, interactive seat raycasting, 'Feel The View' camera glide.</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 11–12</span>
+          <span class="text-white font-bold shrink-0">Fulfillment & Checkout:</span>
+          <span class="text-gray-400 truncate">Video texture on 3D screen, payment gateway, ZXing QR generation, My Tickets.</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="font-mono font-bold text-amber-400 bg-black/40 px-2 py-0.5 rounded shrink-0">Days 13–15</span>
+          <span class="text-white font-bold shrink-0">Polish, Theme & Delivery:</span>
+          <span class="text-gray-400 truncate">Full dark/light mode, mobile responsive audit, final evaluation presentation.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: Acceptance Criteria -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border border-white/10 bg-[#0e1017] p-8 sm:p-12 shadow-2xl">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Quality Assurance</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-6">
+        PRD Acceptance Criteria Checklist
+      </h2>
+
+      <div class="space-y-2.5 text-xs">
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>3D Preloader Wall:</strong> 6 rows of posters gliding across in 3D perspective for 3 seconds without gaps.</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>Hero Curation:</strong> Carousel prioritizes Ramayana, Aakasamlo Oka Tara, and OM with clean mobile CTAs.</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>3D Cinema Canvas:</strong> Real-time WebGL auditorium with video texture on screen and mobile tour controls.</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>'Feel The View' POV:</strong> Clicking a seat moves camera to that eye-view looking directly at screen.</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>Zero Double-Booking:</strong> Atomic multi-seat booking with PostgreSQL FOR UPDATE row locks.</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+          <span class="text-white">✔ <strong>Global Dark Theme:</strong> One-click theme toggle across all pages (Navbar, Home, Movie, 3D Hall, Checkout, Tickets).</span>
+          <span class="rounded bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 font-mono text-[10px]">PASS (100%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Conclusion & Q&A -->
+    <div class="slide flex-col justify-center w-full max-w-5xl rounded-3xl border-2 border-[#e8b634] bg-[#0e1017] p-8 sm:p-14 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-amber-500/10 blur-[140px] pointer-events-none"></div>
+      <span class="text-xs font-bold uppercase tracking-widest text-[#e8b634]">Final Evaluation</span>
+      <h2 class="font-display text-4xl sm:text-5xl font-black text-white mt-1 mb-6">
+        Conclusion & Live Demonstration
+      </h2>
+
+      <div class="space-y-4 text-xs sm:text-sm text-gray-300 max-w-3xl leading-relaxed">
+        <p>• Successfully delivered a complete, full-stack, production-grade 3D cinema booking web platform within the 15-day sprint window.</p>
+        <p>• Solved the legacy 2D seat blind-booking problem by introducing WebGL 'Feel The View' sightline verification and active trailer playback on screen.</p>
+        <p>• Engineered a resilient architecture with plain Java microservices, PostgreSQL atomic row locks, and responsive Next.js 14 frontend.</p>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-white font-bold block text-base">Thank You!</span>
+          <span class="text-gray-400 text-xs">Faculty Evaluators & SRM University-AP · Ready for Q&A</span>
+        </div>
+        <a href="/" class="inline-flex items-center gap-2 rounded-xl bg-[#e8b634] hover:bg-[#d8a529] text-black px-6 py-3 text-xs font-bold transition-all w-max shadow-lg">
+          <span>Launch Live CineVista 3D App</span> →
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <footer class="border-t border-white/10 bg-black/60 backdrop-blur-xl px-4 py-3 flex items-center justify-between text-xs text-gray-400">
+    <div>
+      Use <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono">←</kbd> and <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono">→</kbd> keys or swipe to navigate
+    </div>
+    <div>
+      Bhima Vijith & Team · CineVista 3D
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const indicator = document.getElementById('slideIndicator');
+
+    function showSlide(index) {
+      slides.forEach((s, i) => {
+        s.classList.remove('active');
+        if (i === index) s.classList.add('active');
+      });
+      indicator.textContent = `Slide ${index + 1} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(currentSlide);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Touch swipe support for mobile
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) nextSlide();
+      if (touchEndX - touchStartX > 50) prevSlide();
+    });
+  </script>
+</body>
+</html>

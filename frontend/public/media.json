@@ -1,0 +1,79 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Crimson Horizon",
+      "poster": "/media/posters/movie1.jpg",
+      "teaser": "/media/teasers/movie1.mp4",
+      "trailer": "/media/trailers/movie1.mp4"
+    },
+    {
+      "id": 2,
+      "title": "The Last Brushstroke",
+      "poster": "/media/posters/movie2.jpg",
+      "teaser": "/media/teasers/movie2.mp4",
+      "trailer": "/media/trailers/movie2.mp4"
+    },
+    {
+      "id": 3,
+      "title": "Neon Alley",
+      "poster": "/media/posters/movie3.jpg",
+      "teaser": "/media/teasers/movie3.mp4",
+      "trailer": "/media/trailers/movie3.mp4"
+    },
+    {
+      "id": 4,
+      "title": "Whispers in the Canopy",
+      "poster": "/media/posters/movie4.jpg",
+      "teaser": "/media/teasers/movie4.mp4",
+      "trailer": "/media/trailers/movie4.mp4"
+    },
+    {
+      "id": 5,
+      "title": "Parallel Drift",
+      "poster": "/media/posters/movie5.jpg",
+      "teaser": "/media/teasers/movie5.mp4",
+      "trailer": "/media/trailers/movie5.mp4"
+    },
+    {
+      "id": 6,
+      "title": "Iron Monsoon",
+      "poster": "/media/posters/movie6.jpg",
+      "teaser": "/media/teasers/movie6.mp4",
+      "trailer": "/media/trailers/movie6.mp4"
+    },
+    {
+      "id": 7,
+      "title": "Laughing Shadows",
+      "poster": "/media/posters/movie7.jpg",
+      "teaser": "/media/teasers/movie7.mp4",
+      "trailer": "/media/trailers/movie7.mp4"
+    },
+    {
+      "id": 8,
+      "title": "Starfall Symphony",
+      "poster": "/media/posters/movie8.jpg",
+      "teaser": "/media/teasers/movie8.mp4",
+      "trailer": "/media/trailers/movie8.mp4"
+    }
+  ],
+  "galleryPosters": [
+    "/media/posters/Kalki-2898AD.jpg",
+    "/media/posters/Pushpa-2.jpg",
+    "/media/posters/RRR.jpg",
+    "/media/posters/Amaran.jpg",
+    "/media/posters/Arjun-reddy.jpg",
+    "/media/posters/KGF.jpg",
+    "/media/posters/Vikram.jpg",
+    "/media/posters/Salar.jpg",
+    "/media/posters/Jersy.jpg",
+    "/media/posters/Bahubali.jpg",
+    "/media/posters/Ala-vikuntapuramlo.jpg",
+    "/media/posters/Sita-ramam.jpg",
+    "/media/posters/kantara-2.jpg",
+    "/media/posters/Major.jpg",
+    "/media/posters/OG.jpg",
+    "/media/posters/HIT-3.jpg"
+  ]
+}
+

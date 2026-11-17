@@ -1,0 +1,82 @@
+# =========================================================================
+# CineVista 3D — Production Git Ignore
+# =========================================================================
+
+# Presentations & PRD Documents
+*.pptx
+*.ppt
+*.ppsx
+*PRD*
+*prd*
+*Product Requirements Document*
+*.pdf
+frontend/public/*.pptx
+frontend/public/*.ppt
+frontend/public/*.pdf
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Next.js Build Outputs
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+dist/
+
+# TypeScript Cache
+*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Java / Maven Build Artifacts
+target/
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/
+
+# Database / PostgreSQL Local Cluster (CRITICAL - DO NOT COMMIT BINARY DB)
+pgdata/
+backend/pgdata/
+*.db
+*.sqlite
+*.sql.bak
+
+# Local Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+!.env.example
+
+# Microsoft Office Lock Files & Temp
+~$*
+
+# IDE, OS & System Metadata
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Temporary / Scratch Files
+New folder/
+temp/
+tmp/
+*.tmp
+*~
+pptx_temp/
+extracted_media/
