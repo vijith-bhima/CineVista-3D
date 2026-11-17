@@ -12,8 +12,8 @@ public class User {
     private String role;       // "user" or "admin"
     private String createdAt;
 
-    // Used for login/register requests (not stored)
-    private transient String password;
+    // Used for login/register requests (not stored in DB)
+    private String password;
 
     public User() {}
 
