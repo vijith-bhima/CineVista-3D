@@ -123,6 +123,7 @@ export default function BookTicketsPage() {
       })
       .catch((err) => {
         console.error('Failed to load movie/theatres:', err);
+        setLoading(false);
       });
   }, [movieId, next7Days, paramDate, paramTheatreId, setSelectedMovieStore, setSelectedTheatreStore]);
 
@@ -144,10 +145,12 @@ export default function BookTicketsPage() {
           setSelectedShow(null);
           setSelectedShowStore(null);
           setSeats([]);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.error('Failed to load shows:', err);
+        setLoading(false);
       });
   }, [movieId, selectedDate, selectedTheatreId, paramShowId, setSelectedShowStore]);
 

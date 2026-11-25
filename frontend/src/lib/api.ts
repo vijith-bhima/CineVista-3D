@@ -1,5 +1,11 @@
 import { Movie, Theatre, Show, Seat, BookingRequest, Booking } from '@/types';
 import { supabase, isSupabaseConfigured, resolveMediaUrl } from './supabase';
+import {
+  FALLBACK_MOVIES,
+  FALLBACK_THEATRES,
+  generateFallbackShows,
+  generateFallbackSeats,
+} from './fallbackData';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
@@ -57,13 +63,20 @@ export async function getMovies(): Promise<Movie[]> {
       console.warn('[Supabase] Falling back to REST API for movies:', e);
     }
   }
-  const movies = await fetchJson<Movie[]>(`${API_BASE}/movies`);
-  return movies.map((m) => ({
-    ...m,
-    posterUrl: resolveMediaUrl(m.posterUrl),
-    teaserUrl: resolveMediaUrl(m.teaserUrl),
-    trailerUrl: resolveMediaUrl(m.trailerUrl),
-  }));
+  try {
+    const movies = await fetchJson<Movie[]>(`${API_BASE}/movies`);
+    if (movies && Array.isArray(movies) && movies.length > 0) {
+      return movies.map((m) => ({
+        ...m,
+        posterUrl: resolveMediaUrl(m.posterUrl),
+        teaserUrl: resolveMediaUrl(m.teaserUrl),
+        trailerUrl: resolveMediaUrl(m.trailerUrl),
+      }));
+    }
+  } catch (err) {
+    console.warn('[API] REST API unavailable, using embedded high-speed dataset:', err);
+  }
+  return FALLBACK_MOVIES;
 }
 
 export async function getMovie(id: number): Promise<Movie> {
@@ -77,13 +90,21 @@ export async function getMovie(id: number): Promise<Movie> {
       console.warn('[Supabase] Falling back to REST API for movie:', e);
     }
   }
-  const m = await fetchJson<Movie>(`${API_BASE}/movies/${id}`);
-  return {
-    ...m,
-    posterUrl: resolveMediaUrl(m.posterUrl),
-    teaserUrl: resolveMediaUrl(m.teaserUrl),
-    trailerUrl: resolveMediaUrl(m.trailerUrl),
-  };
+  try {
+    const m = await fetchJson<Movie>(`${API_BASE}/movies/${id}`);
+    if (m && m.id) {
+      return {
+        ...m,
+        posterUrl: resolveMediaUrl(m.posterUrl),
+        teaserUrl: resolveMediaUrl(m.teaserUrl),
+        trailerUrl: resolveMediaUrl(m.trailerUrl),
+      };
+    }
+  } catch (err) {
+    console.warn(`[API] REST API unavailable for movie ${id}, using fallback:`, err);
+  }
+  const fallback = FALLBACK_MOVIES.find((m) => m.id === id) || FALLBACK_MOVIES[0];
+  return fallback;
 }
 
 export async function getTheatres(): Promise<Theatre[]> {
@@ -103,7 +124,15 @@ export async function getTheatres(): Promise<Theatre[]> {
       console.warn('[Supabase] Falling back to REST API for theatres:', e);
     }
   }
-  return fetchJson<Theatre[]>(`${API_BASE}/theatres`);
+  try {
+    const theatres = await fetchJson<Theatre[]>(`${API_BASE}/theatres`);
+    if (theatres && Array.isArray(theatres) && theatres.length > 0) {
+      return theatres;
+    }
+  } catch (err) {
+    console.warn('[API] REST API unavailable for theatres, using fallback:', err);
+  }
+  return FALLBACK_THEATRES;
 }
 
 export async function getShows(movieId?: number, date?: string, theatreId?: number): Promise<Show[]> {
@@ -115,7 +144,7 @@ export async function getShows(movieId?: number, date?: string, theatreId?: numb
       if (theatreId) query = query.eq('theatre_id', theatreId);
 
       const { data, error } = await query;
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         return data.map((s: any) => ({
           id: s.id,
           movieId: s.movie_id,
@@ -133,12 +162,21 @@ export async function getShows(movieId?: number, date?: string, theatreId?: numb
     }
   }
 
-  const params = new URLSearchParams();
-  if (movieId) params.append('movieId', String(movieId));
-  if (date) params.append('date', date);
-  if (theatreId) params.append('theatreId', String(theatreId));
-  const q = params.toString();
-  return fetchJson<Show[]>(`${API_BASE}/shows${q ? `?${q}` : ''}`);
+  try {
+    const params = new URLSearchParams();
+    if (movieId) params.append('movieId', String(movieId));
+    if (date) params.append('date', date);
+    if (theatreId) params.append('theatreId', String(theatreId));
+    const q = params.toString();
+    const shows = await fetchJson<Show[]>(`${API_BASE}/shows${q ? `?${q}` : ''}`);
+    if (shows && Array.isArray(shows) && shows.length > 0) {
+      return shows;
+    }
+  } catch (err) {
+    console.warn('[API] REST API unavailable for shows, generating realistic fallback shows:', err);
+  }
+
+  return generateFallbackShows(movieId || 1, date, theatreId);
 }
 
 export async function getShow(id: number): Promise<Show> {
@@ -149,42 +187,53 @@ export async function getSeats(showId: number): Promise<Seat[]> {
   if (isSupabaseConfigured() && supabase) {
     try {
       // Query booked seats from Supabase
-      const { data: booked } = await supabase
+      const { data: booked, error } = await supabase
         .from('booking_seats')
         .select('seat_label')
         .eq('show_id', showId);
 
-      const bookedSet = new Set((booked || []).map((b: any) => b.seat_label));
+      if (!error) {
+        const bookedSet = new Set((booked || []).map((b: any) => b.seat_label));
 
-      // Generate 120-seat matrix matching theatre layout
-      const seatList: Seat[] = [];
-      const rowLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-      for (const r of rowLetters) {
-        for (let num = 1; num <= 12; num++) {
-          const label = `${r}${num}`;
-          const isStandard = r <= 'D';
-          const isPremium = r >= 'E' && r <= 'H';
-          const cat = isStandard ? 'standard' : isPremium ? 'premium' : 'recliner';
-          const price = isStandard ? 150 : isPremium ? 240 : 550;
-          const status = bookedSet.has(label) ? 'sold' : 'available';
+        // Generate 120-seat matrix matching theatre layout
+        const seatList: Seat[] = [];
+        const rowLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        for (const r of rowLetters) {
+          for (let num = 1; num <= 12; num++) {
+            const label = `${r}${num}`;
+            const isStandard = r <= 'D';
+            const isPremium = r >= 'E' && r <= 'H';
+            const cat = isStandard ? 'standard' : isPremium ? 'premium' : 'recliner';
+            const price = isStandard ? 150 : isPremium ? 240 : 550;
+            const status = bookedSet.has(label) ? 'sold' : 'available';
 
-          seatList.push({
-            label,
-            row: r,
-            number: num,
-            category: cat as any,
-            price,
-            status,
-          });
+            seatList.push({
+              label,
+              row: r,
+              number: num,
+              category: cat as any,
+              price,
+              status,
+            });
+          }
         }
+        return seatList;
       }
-      return seatList;
     } catch (e) {
       console.warn('[Supabase] Falling back to REST API for seats:', e);
     }
   }
 
-  return fetchJson<Seat[]>(`${API_BASE}/shows/${showId}/seats`);
+  try {
+    const seats = await fetchJson<Seat[]>(`${API_BASE}/shows/${showId}/seats`);
+    if (seats && Array.isArray(seats) && seats.length > 0) {
+      return seats;
+    }
+  } catch (err) {
+    console.warn('[API] REST API unavailable for seats, generating 120-seat layout:', err);
+  }
+
+  return generateFallbackSeats(showId);
 }
 
 export async function getBestSeats(showId: number, qty: number): Promise<string[]> {
