@@ -252,8 +252,16 @@ export default function CinemaSeats({ seats, onSeatClick }: CinemaSeatsProps) {
       armrest: new THREE.MeshStandardMaterial({ color: '#1a1c24', roughness: 0.4, metalness: 0.2 }),
       cupholder: new THREE.MeshStandardMaterial({ color: '#334155', metalness: 0.8, roughness: 0.2 }),
       plinth: new THREE.MeshStandardMaterial({ color: '#0f1117', roughness: 0.9, metalness: 0.4 }),
-      available: new THREE.MeshStandardMaterial({ color: '#a81c2b', roughness: 0.65, metalness: 0.06 }),
-      sold: new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.35, metalness: 0.08 }),
+      available: new THREE.MeshStandardMaterial({
+        color: '#be123c',
+        roughness: 0.42,
+        metalness: 0.1,
+      }),
+      sold: new THREE.MeshStandardMaterial({
+        color: '#334155',
+        roughness: 0.55,
+        metalness: 0.05,
+      }),
       selected: new THREE.MeshStandardMaterial({
         color: '#10b981',
         emissive: '#059669',

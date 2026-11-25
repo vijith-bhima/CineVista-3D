@@ -14,7 +14,7 @@ interface CameraPresetBarProps {
 
 const PRESETS: { id: CameraPreset; label: string; icon: React.ReactNode }[] = [
   { id: 'Overview', label: 'Overview', icon: <Eye className="h-3.5 w-3.5" /> },
-  { id: 'Near screen', label: 'Near screen', icon: <Disc className="h-3.5 w-3.5" /> },
+  { id: 'Near screen', label: 'From Screen', icon: <Disc className="h-3.5 w-3.5" /> },
   { id: 'Balcony', label: 'Balcony', icon: <Layers className="h-3.5 w-3.5" /> },
   { id: 'Top view', label: 'Top view', icon: <Camera className="h-3.5 w-3.5" /> },
   { id: 'My Seat', label: 'Seat view', icon: <UserCheck className="h-3.5 w-3.5" /> },
@@ -23,8 +23,11 @@ const PRESETS: { id: CameraPreset; label: string; icon: React.ReactNode }[] = [
 export default function CameraPresetBar({ showId, cleanView = false, onAlert }: CameraPresetBarProps) {
   const cameraPreset = useBookingStore((s) => s.cameraPreset);
   const setCameraPreset = useBookingStore((s) => s.setCameraPreset);
+  const activeSeat = useBookingStore((s) => s.activeSeatEyeView);
+  const setActiveSeatEyeView = useBookingStore((s) => s.setActiveSeatEyeView);
   const soundEnabled = useBookingStore((s) => s.soundEnabled);
   const toggleSound = useBookingStore((s) => s.toggleSound);
+  const selectedSeats = useBookingStore((s) => s.selectedSeats);
   const setSelectedSeats = useBookingStore((s) => s.setSelectedSeats);
 
   const [bestQty, setBestQty] = useState(2);
@@ -61,10 +64,17 @@ export default function CameraPresetBar({ showId, cleanView = false, onAlert }: 
           return (
             <button
               key={p.id}
-              onClick={() => setCameraPreset(p.id)}
+              onClick={() => {
+                if (p.id === 'My Seat') {
+                  const targetSeat = activeSeat || selectedSeats[0] || 'F13';
+                  setActiveSeatEyeView(targetSeat);
+                } else {
+                  setCameraPreset(p.id);
+                }
+              }}
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                 isActive
-                  ? 'bg-white/10 text-white font-semibold border border-white/20'
+                  ? 'bg-amber-400/20 text-amber-300 font-semibold border border-amber-400/40'
                   : 'text-gray-400 hover:text-white'
               }`}
               title={p.label}

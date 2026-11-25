@@ -29,6 +29,8 @@ export default function CameraController() {
   const prevPointer = useRef({ x: 0, y: 0 });
   const currentYaw = useRef(0);
   const currentPitch = useRef(0);
+  const baseLookYaw = useRef(0);
+  const baseLookPitch = useRef(0);
   const targetFOV = useRef(54);
 
   // Tour mode
@@ -44,18 +46,38 @@ export default function CameraController() {
       const rowChar = activeSeat.charAt(0).toUpperCase();
       const rIdx = Math.max(0, Math.min(12, rowChar.charCodeAt(0) - 65));
 
-      desiredPos.current.set(sx, sy + 1.42, sz + 0.08);
-      desiredTarget.current.set(0, 6.2, -17.5);
+      // Slightly elevate eyes above headrest and advance slightly forward for front rows
+      const eyeHeight = sy + (rIdx <= 2 ? 1.50 : 1.44);
+      const eyeZ = sz + (rIdx <= 2 ? 0.16 : 0.08);
+      desiredPos.current.set(sx, eyeHeight, eyeZ);
+
+      // Target the center of the giant IMAX screen at (0, 6.0, -17.5)
+      const screenX = 0;
+      const screenY = 6.0;
+      const screenZ = -17.5;
+      desiredTarget.current.set(screenX, screenY, screenZ);
+
+      // Compute exact direct angle to screen center:
+      // Corner seats naturally angle inward, front seats tilt up to center of screen
+      const dx = screenX - sx;
+      const dy = screenY - eyeHeight;
+      const dz = screenZ - eyeZ;
+      const horizDist = Math.hypot(dx, dz);
+
+      baseLookYaw.current = Math.atan2(dx, -dz);
+      baseLookPitch.current = Math.atan2(dy, horizDist);
 
       currentYaw.current = 0;
       currentPitch.current = 0;
 
+      // Adaptive IMAX FOV:
+      // Front seats get wide 70° FOV so the giant screen is fully framed without edge cutoffs
       if (rIdx <= 2) {
-        targetFOV.current = 62;
-      } else if (rIdx <= 7) {
-        targetFOV.current = 54;
+        targetFOV.current = 70;
+      } else if (rIdx <= 6) {
+        targetFOV.current = 58;
       } else {
-        targetFOV.current = 48;
+        targetFOV.current = 50;
       }
     } else {
       targetFOV.current = 54;
@@ -75,28 +97,24 @@ export default function CameraController() {
         }
 
         case 'Near screen':
-          desiredPos.current.set(0, 2.6, -10.5);
-          desiredTarget.current.set(0, 6.2, -17.5);
+        case 'From Stage':
+          desiredPos.current.set(0, 3.2, -13.5);
+          desiredTarget.current.set(0, 4.2, 5.0);
           break;
 
         case 'Balcony':
-          desiredPos.current.set(0, 12.8, 18.2);
-          desiredTarget.current.set(0, 5.2, -17.5);
+          desiredPos.current.set(0, 13.0, 18.5);
+          desiredTarget.current.set(0, 4.8, -12.0);
           break;
 
         case 'Top view':
-          desiredPos.current.set(0, 14.2, 3);
-          desiredTarget.current.set(0, 0, 3);
-          break;
-
-        case 'From Stage':
-          desiredPos.current.set(0, 2.8, -12.5);
-          desiredTarget.current.set(0, 4.5, 6);
+          desiredPos.current.set(0, 15.2, 2.5);
+          desiredTarget.current.set(0, 0, 2.5);
           break;
 
         default:
-          desiredPos.current.set(-8.5, 10.5, 17.5);
-          desiredTarget.current.set(0, 3.8, 1);
+          desiredPos.current.set(-7.5, 11.2, 17.5);
+          desiredTarget.current.set(0, 3.8, 0.5);
           break;
       }
     }
@@ -226,13 +244,20 @@ export default function CameraController() {
         camera.position.copy(desiredPos.current);
       }
 
-      // Clean spherical look-at vector pointing directly towards screen + user yaw/pitch
-      const cp = Math.cos(currentPitch.current);
-      const sp = Math.sin(currentPitch.current);
-      const cy = Math.cos(currentYaw.current);
-      const sy = Math.sin(currentYaw.current);
+      // Combine baseline direct sightline towards screen center with user manual look-around
+      const totalYaw = baseLookYaw.current + currentYaw.current;
+      const totalPitch = THREE.MathUtils.clamp(
+        baseLookPitch.current + currentPitch.current,
+        -1.15,
+        1.15
+      );
 
-      // Facing screen (-Z) at baseline
+      const cp = Math.cos(totalPitch);
+      const sp = Math.sin(totalPitch);
+      const cy = Math.cos(totalYaw);
+      const sy = Math.sin(totalYaw);
+
+      // Facing screen with direct focus on screen center
       const forward = new THREE.Vector3(sy * cp, sp, -cy * cp);
       camera.lookAt(camera.position.clone().add(forward.multiplyScalar(20)));
       return;
@@ -258,10 +283,10 @@ export default function CameraController() {
 
       controlsRef.current.update();
 
-      // Boundary clamp
-      camera.position.x = Math.max(-14.0, Math.min(14.0, camera.position.x));
-      camera.position.y = Math.max(1.5, Math.min(16.0, camera.position.y));
-      camera.position.z = Math.max(-14.0, Math.min(24.0, camera.position.z));
+      // Boundary clamp - strictly within the interior of the auditorium walls
+      camera.position.x = Math.max(-12.8, Math.min(12.8, camera.position.x));
+      camera.position.y = Math.max(1.4, Math.min(13.8, camera.position.y));
+      camera.position.z = Math.max(-15.5, Math.min(19.8, camera.position.z));
     }
   });
 
@@ -282,13 +307,13 @@ export default function CameraController() {
       enableDamping={true}
       dampingFactor={0.12}
       enableZoom={true}
-      zoomSpeed={1.0}
-      rotateSpeed={1.0}
-      panSpeed={0.8}
+      zoomSpeed={0.9}
+      rotateSpeed={0.85}
+      panSpeed={0.7}
       minDistance={3.0}
-      maxDistance={28.0}
-      minPolarAngle={0.05}
-      maxPolarAngle={Math.PI * 0.49}
+      maxDistance={22.0}
+      minPolarAngle={Math.PI * 0.05}
+      maxPolarAngle={Math.PI * 0.47}
       touches={{
         ONE: THREE.TOUCH.ROTATE,
         TWO: THREE.TOUCH.DOLLY_PAN,

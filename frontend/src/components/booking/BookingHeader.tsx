@@ -309,17 +309,25 @@ export default function BookingHeader({
             </div>
           )}
 
-          {/* Active Seat View indicator */}
+          {/* Active Seat View indicator in Header */}
           {activeSeat && viewMode === '3D' && (
             <button
-              onClick={() => setCameraPreset('My Seat')}
-              className={`flex items-center gap-1 rounded-xl border px-2 py-1 text-[11px] font-bold transition-all shadow-md backdrop-blur-md ${
+              onClick={() => {
+                if (cameraPreset === 'My Seat') {
+                  setCameraPreset('Overview');
+                } else {
+                  setCameraPreset('My Seat');
+                }
+              }}
+              className={`flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[11px] font-bold transition-all shadow-md backdrop-blur-md ${
                 cameraPreset === 'My Seat'
-                  ? 'bg-emerald-500 text-white border-emerald-400'
+                  ? 'bg-emerald-500 text-black border-emerald-400 font-extrabold shadow-emerald-500/25'
                   : 'bg-black/70 text-white/90 border-white/15 hover:bg-black/90'
               }`}
+              title={cameraPreset === 'My Seat' ? 'Exit Seat POV to Overview' : `View sightline from seat ${activeSeat}`}
             >
-              <span>Seat {activeSeat}</span>
+              <Eye className="h-3 w-3" />
+              <span>{cameraPreset === 'My Seat' ? `POV: ${activeSeat}` : `Seat ${activeSeat}`}</span>
             </button>
           )}
         </div>

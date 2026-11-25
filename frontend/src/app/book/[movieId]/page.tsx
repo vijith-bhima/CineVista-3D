@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import dynamicImport from 'next/dynamic';
-import { X, Film } from 'lucide-react';
+import { X, Film, AlertCircle, Eye } from 'lucide-react';
 import BookingHeader from '@/components/booking/BookingHeader';
 import TopLeftMediaBar from '@/components/booking/TopLeftMediaBar';
 import BottomLeftControls from '@/components/booking/BottomLeftControls';
@@ -58,6 +58,13 @@ export default function BookTicketsPage() {
   const [selectedShow, setSelectedShow] = useState<Show | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState(true);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+
+  const showAlert = useCallback((msg: string) => {
+    setAlertMessage(msg);
+    const timer = setTimeout(() => setAlertMessage(null), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Zustand state
   const setSelectedMovieStore = useBookingStore((s) => s.setSelectedMovie);
@@ -69,17 +76,22 @@ export default function BookTicketsPage() {
   const activeSeat = useBookingStore((s) => s.activeSeatEyeView);
   const cameraPreset = useBookingStore((s) => s.cameraPreset);
   const viewMode = useBookingStore((s) => s.viewMode);
+  const selectedSeats = useBookingStore((s) => s.selectedSeats);
 
-  // Press ESC to exit Theatre View
+  // Press ESC to exit Theatre View or Seat POV
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isTheatreView) {
-        setIsTheatreView(false);
+      if (e.key === 'Escape') {
+        if (isTheatreView) {
+          setIsTheatreView(false);
+        } else if (cameraPreset === 'My Seat') {
+          useBookingStore.getState().setCameraPreset('Overview');
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isTheatreView, setIsTheatreView]);
+  }, [isTheatreView, setIsTheatreView, cameraPreset]);
 
   // Generate 7 days starting today
   const next7Days = useMemo(() => {
@@ -261,12 +273,79 @@ export default function BookTicketsPage() {
         <CinemaCanvas
           trailerUrl={movie?.trailerUrl || movie?.teaserUrl}
           seats={seats}
+          onSeatClick={(label) => {
+            const currentSelected = useBookingStore.getState().selectedSeats;
+            if (currentSelected.length >= 6 && !currentSelected.includes(label)) {
+              showAlert('Maximum of 6 seats can be selected per booking');
+            }
+          }}
         />
       </div>
 
       {/* ─── 2. 2D Seat Map (Clean Light BookMyShow-style view when 2D is toggled) ─── */}
       {viewMode === '2D' && !isTheatreView && (
         <TwoDSeatMap seats={seats} />
+      )}
+
+      {/* ─── Top Floating Sightline POV Mode HUD (Only when in My Seat preset) ─── */}
+      {viewMode === '3D' && cameraPreset === 'My Seat' && activeSeat && (
+        <div className="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-40 pointer-events-auto animate-fade-in w-full max-w-lg px-3">
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-400/50 bg-black/90 px-4 py-2.5 text-xs text-white shadow-2xl backdrop-blur-xl">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex h-2.5 w-2.5 relative shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+              </span>
+              <div className="truncate">
+                <span className="text-white/70">Sitting in:</span>{' '}
+                <strong className="text-emerald-300 font-extrabold text-sm">{activeSeat}</strong>
+                <span className="hidden sm:inline text-white/50 text-[11px] ml-2">↔ Drag to look around</span>
+              </div>
+            </div>
+
+            {/* If multiple seats selected, quick pills to toggle perspective */}
+            {selectedSeats.length > 1 && (
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-[10px] text-white/50 hidden sm:inline">Switch:</span>
+                {selectedSeats.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => useBookingStore.getState().setActiveSeatEyeView(s)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all ${
+                      s === activeSeat
+                        ? 'bg-emerald-500 text-black shadow'
+                        : 'bg-white/10 text-white/80 hover:bg-white/20'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Exit POV Button */}
+            <button
+              onClick={() => {
+                useBookingStore.getState().setCameraPreset('Overview');
+              }}
+              className="flex items-center gap-1 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 px-2.5 py-1 text-xs font-bold text-white transition-all shrink-0 hover:scale-105 active:scale-95"
+              title="Return to Hall Overview"
+            >
+              <X className="h-3.5 w-3.5" />
+              <span>Exit POV</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Toast Alert Notification (Max Seats, etc.) ─── */}
+      {alertMessage && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-bounce pointer-events-none">
+          <div className="rounded-2xl border border-amber-400/80 bg-black/95 px-4 py-2 text-xs font-bold text-amber-300 shadow-2xl backdrop-blur-xl flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
+            <span>{alertMessage}</span>
+          </div>
+        </div>
       )}
 
       {/* ─── 3. Fullscreen Theatre Mode HUD ─── */}
@@ -319,18 +398,6 @@ export default function BookTicketsPage() {
           {/* 3D Bottom Right Zoom & Reset controls */}
           {viewMode === '3D' && (
             <BottomRightControls />
-          )}
-
-          {/* 3D Floating Seat View Indicator */}
-          {viewMode === '3D' && (cameraPreset === 'My Seat' || activeSeat) && (
-            <div className="absolute bottom-24 sm:bottom-28 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-xs font-semibold text-slate-800 shadow-xl backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>
-                  Viewing from <strong className="text-slate-950 font-bold">{activeSeat || 'Selected Seat'}</strong> · drag or scroll to look around
-                </span>
-              </div>
-            </div>
           )}
 
           {/* Bottom Summary Bar: Seat Chips, Live Price Total, Expandable Breakdown, Continue CTA */}

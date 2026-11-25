@@ -192,6 +192,7 @@ export default function CinemaRoom({ isMobile = false }: CinemaRoomProps) {
               color="#2a1f18"
               roughness={0.88}
               metalness={0.04}
+              side={THREE.DoubleSide}
             />
           </mesh>
 
@@ -238,7 +239,7 @@ export default function CinemaRoom({ isMobile = false }: CinemaRoomProps) {
       {/* Rear Wall Warm Wood Panel */}
       <mesh position={[0, 9.5, 20.8]}>
         <boxGeometry args={[27.0, 18, 0.04]} />
-        <meshStandardMaterial color="#221811" roughness={0.92} />
+        <meshStandardMaterial color="#221811" roughness={0.92} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Prominent Green Glowing Emergency EXIT Signs on Left & Right Walls near Front */}
@@ -283,8 +284,11 @@ export default function CinemaRoom({ isMobile = false }: CinemaRoomProps) {
       )}
 
       {/* Cinematic Warm Ambient Light & Directional Definition Light */}
-      <ambientLight intensity={houseLights ? 0.85 : 0.45} color={houseLights ? '#fef3c7' : '#e2e8f0'} />
-      <directionalLight position={[0, 18, 8]} intensity={0.65} color="#fef3c7" />
+      <ambientLight intensity={houseLights ? 0.95 : 0.55} color={houseLights ? '#fef3c7' : '#e2e8f0'} />
+      <directionalLight position={[0, 18, 8]} intensity={0.75} color="#fef3c7" />
+
+      {/* Screen / Stage Front Projector Fill Light - brightly illuminates seats when viewed from screen */}
+      <directionalLight position={[0, 8.5, -16.0]} intensity={0.65} color="#fed7aa" />
 
       {/* 2 Gentle Low-Cost Aisle Floor Fill Lights illuminating the steps without lag */}
       <pointLight position={[0, 3.2, -2]} intensity={0.4} distance={9} color="#f59e0b" />

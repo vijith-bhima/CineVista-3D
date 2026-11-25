@@ -212,14 +212,13 @@ export default function TwoDSeatMap({ seats, onSeatClick }: TwoDSeatMapProps) {
                                   <span>{seatNum}</span>
                                 )}
 
-                                {/* Hover 3D preview trigger */}
+                                {/* Hover tooltip */}
                                 {isHovered && !sold && !selected && (
                                   <div
-                                    onClick={(e) => handlePreviewSeat(e, label)}
-                                    className="absolute -top-6 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[8px] font-medium text-white shadow-md flex items-center gap-0.5"
+                                    className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap rounded bg-slate-950 px-1.5 py-0.5 text-[9px] font-bold text-white shadow-md flex items-center gap-1"
                                   >
-                                    <Eye className="h-2 w-2" />
-                                    <span>3D</span>
+                                    <span>{label}</span>
+                                    <span className="text-amber-400 font-extrabold">₹{tier.price}</span>
                                   </div>
                                 )}
                               </button>
